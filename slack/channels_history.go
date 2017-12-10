@@ -24,8 +24,8 @@ type History struct {
 	} `json:"messages"`
 }
 
-func (c *Client) GetChannlesHistory(ctx context.Context, channel string, count int) (History, error) {
-	spath := fmt.Sprintf("/channels.history", owner, repo)
+func (c *Client) GetChannlesHistory(ctx context.Context, channel string, count string) (*History, error) {
+	spath := fmt.Sprintf("/channels.history")
 	values := url.Values{}
 	values.Add("channel", channel)
 	values.Add("count", count)
@@ -41,13 +41,14 @@ func (c *Client) GetChannlesHistory(ctx context.Context, channel string, count i
 	}
 
 	if res.StatusCode == http.StatusNotFound {
-		return nil, errors.Errorf("pulls(%s) NotFound", spath)
+		return nil, errors.Errorf("history NotFound", spath)
 	}
+	fmt.Printf("status:%s", res.Status)
 
 	var history History
 	if err := decodeBody(res, &history); err != nil {
 		return nil, err
 	}
 
-	return pulls, nil
+	return &history, nil
 }

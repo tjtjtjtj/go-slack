@@ -9,6 +9,9 @@ import (
 	"path"
 )
 
+var SlackClient *Client
+var Ctx context.Context
+
 type Client struct {
 	URL        *url.URL
 	HTTPClient *http.Client
